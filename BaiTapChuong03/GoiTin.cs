@@ -2,9 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BaiTapChuong03
+namespace BaiTap3
 {
-    internal class GoiTin
-    {
-    }
+    public record GoiTin(
+        string Loai,
+        string hoTen = null,
+        string IDND = null,
+        string NguyenNhanLoi = null,
+        string ThongBao = null,
+        string username = null,
+        string password = null,
+        string email = null
+    );
 }
