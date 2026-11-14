@@ -14,5 +14,11 @@ namespace BaiTapChuong03
         {
             InitializeComponent();
         }
+
+        private void btnMoDangKy_Click(object sender, EventArgs e)
+        {
+            using var registerForm = new RegisterForm();
+            registerForm.ShowDialog(this);
+        }
     }
 }

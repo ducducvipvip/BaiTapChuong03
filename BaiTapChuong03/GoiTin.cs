@@ -12,6 +12,10 @@ namespace BaiTap3
         string ThongBao = null,
         string username = null,
         string password = null,
-        string email = null
-    );
+        string email = null,
+        string birthday = null
+    )
+    {
+        public const string MaLoiTrungHoTen = "Trung_Ho_Ten";
+    }
 }

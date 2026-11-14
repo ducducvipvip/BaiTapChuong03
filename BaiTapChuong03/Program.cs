@@ -1,3 +1,5 @@
+using BaiTap3;
+
 namespace BaiTapChuong03
 {
     internal static class Program
@@ -11,7 +13,9 @@ namespace BaiTapChuong03
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            var server = new Server();
+            _ = server.ChayAsync();
+            Application.Run(new LoginForm());
         }
     }
 }
