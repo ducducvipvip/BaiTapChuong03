@@ -17,7 +17,7 @@ namespace BaiTap3
         TcpClient _tcp = new TcpClient();
 
         private const string chuoiketNoi =
-     "Server=localhost\\SQL2025LAB;Database=QuanLyNguoiDung;Integrated Security=True;TrustServerCertificate=True;";
+     "Server=localhost;Database=QuanLyNguoiDung;Integrated Security=True;TrustServerCertificate=True;";
         private readonly ConcurrentDictionary<string, StreamWriter> _danhsachClient = new();
         private readonly SemaphoreSlim _khoaDb = new(1, 1);
         private readonly SemaphoreSlim _khoaGui = new(1, 1);
