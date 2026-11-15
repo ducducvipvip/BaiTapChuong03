@@ -102,20 +102,40 @@ namespace BaiTap3
         {
             using var cn = new SqlConnection(chuoiketNoi);
             await cn.OpenAsync();
-            using (var checkUser = new SqlCommand("SELECT PasswordHash , PasswordSalt , username FORM NGUOIDUNG WHERE username = @u", cn))
+
+            
+            string sql = "SELECT PasswordHash, PasswordSalt, Username, FullName, Email FROM NGUOIDUNG WHERE Username = @u";
+            using (var checkUser = new SqlCommand(sql, cn))
             {
-                checkUser.Parameters.Add("@u", SqlDbType.NVarChar, 200).Value = Pack.username;
+                checkUser.Parameters.Add("@u", SqlDbType.NVarChar, 50).Value = Pack.username;
                 using var r = await checkUser.ExecuteReaderAsync();
+
+                // Không tìm thấy tên đăng nhập -> trả về thông báo lỗi chung giống hệt sai mật khẩu
+                if (!await r.ReadAsync())
+                {
+                    return new GoiTin("LOI", NguyenNhanLoi: "SAI_TK_HOAC_MK", ThongBao: "Tên đăng nhập hoặc mật khẩu không đúng!");
+                }
 
                 string hash = r.GetString(0);
                 string salt = r.GetString(1);
                 string username = r.GetString(2);
+                string hoTen = r.IsDBNull(3) ? username : r.GetString(3);
+                string email = r.IsDBNull(4) ? "" : r.GetString(4);
 
+                // Kiểm tra mật khẩu qua lớp BamMatKhau của nhóm
                 if (!BamMatKhau.Kiem(Pack.password, hash, salt))
                 {
-                    return new GoiTin("LOI", NguyenNhanLoi: "SAI TK OR MK", ThongBao: "Sai tên đăng nhập hoặc mật khẩu!");
+                    return new GoiTin("LOI", NguyenNhanLoi: "SAI_TK_HOAC_MK", ThongBao: "Tên đăng nhập hoặc mật khẩu không đúng!");
                 }
-                return new GoiTin("Success", ThongBao: "Đăng nhập thành công!", username: Pack.username);
+
+                // Đăng nhập thành công -> trả về thông tin người dùng
+                return new GoiTin(
+                    Loai: "Success",
+                    hoTen: hoTen,
+                    ThongBao: "Đăng nhập thành công!",
+                    username: username,
+                    email: email
+                );
             }
         }
 
