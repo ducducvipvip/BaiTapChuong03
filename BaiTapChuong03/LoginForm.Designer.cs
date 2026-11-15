@@ -43,6 +43,7 @@
             txtMatKhau = new TextBox();
             btnDangNhap = new Button();
             lblLoi = new Label();
+            btnKetNoi = new Button();
             SuspendLayout();
             // 
             // lblGioiThieu
@@ -142,6 +143,7 @@
             // 
             // btnDangNhap
             // 
+            btnDangNhap.Enabled = false;
             btnDangNhap.Location = new Point(309, 155);
             btnDangNhap.Name = "btnDangNhap";
             btnDangNhap.Size = new Size(117, 35);
@@ -158,12 +160,23 @@
             lblLoi.Size = new Size(224, 55);
             lblLoi.TabIndex = 12;
             // 
+            // btnKetNoi
+            // 
+            btnKetNoi.Location = new Point(326, 97);
+            btnKetNoi.Name = "btnKetNoi";
+            btnKetNoi.Size = new Size(100, 27);
+            btnKetNoi.TabIndex = 3;
+            btnKetNoi.Text = "Kết nối";
+            btnKetNoi.UseVisualStyleBackColor = true;
+            btnKetNoi.Click += btnKetNoi_Click;
+            // 
             // LoginForm
             // 
             AcceptButton = btnDangNhap;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(480, 260);
+            Controls.Add(btnKetNoi);
             Controls.Add(lblLoi);
             Controls.Add(btnDangNhap);
             Controls.Add(txtMatKhau);
@@ -200,5 +213,6 @@
         private TextBox txtMatKhau;
         private Button btnDangNhap;
         private Label lblLoi;
+        private Button btnKetNoi;
     }
 }
