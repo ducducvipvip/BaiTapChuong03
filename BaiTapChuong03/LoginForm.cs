@@ -84,8 +84,7 @@ namespace BaiTapChuong03
                 var phanHoi = JsonSerializer.Deserialize<GoiTin>(phanHoiJson);
                 if (phanHoi != null && phanHoi.Loai == "Success")
                 {
-                    // Đăng nhập thành công -> Mở Form chính
-                    MainForm mainForm = new MainForm();
+                    MainForm mainForm = new MainForm(phanHoi, client, reader, writer);
                     this.Hide();
                     mainForm.ShowDialog();
                     this.Show();
