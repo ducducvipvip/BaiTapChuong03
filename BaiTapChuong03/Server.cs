@@ -17,7 +17,7 @@ namespace BaiTap3
         TcpClient _tcp = new TcpClient();
 
         private const string chuoiketNoi =
-     "workstation id=Quan_Ly_Nguoi_Dung.mssql.somee.com;packet size=4096;user id=phuvippro_SQLLogin_2;pwd=w457i23xtr;data source=Quan_Ly_Nguoi_Dung.mssql.somee.com;persist security info=False;initial catalog=Quan_Ly_Nguoi_Dung;TrustServerCertificate=True;";
+     "Server=localhost\\SQL2025LAB;Database=QuanLyNguoiDung;Integrated Security=True;TrustServerCertificate=True;";
         private readonly ConcurrentDictionary<string, StreamWriter> _danhsachClient = new();
         private readonly SemaphoreSlim _khoaDb = new(1, 1);
         private readonly SemaphoreSlim _khoaGui = new(1, 1);
@@ -25,16 +25,14 @@ namespace BaiTap3
         {
             string dong = JsonSerializer.Serialize(pack);
             await _khoaGui.WaitAsync();
+            try
             {
-                try
-                {
-                    _ghi.WriteLineAsync(dong);
-                }
-                catch (IOException) { }
-                finally
-                {
-                    _khoaGui.Release();
-                }
+                await _ghi.WriteLineAsync(dong); 
+            }
+            catch (IOException) { }
+            finally
+            {
+                _khoaGui.Release();
             }
         }
         private async Task PhatAllClient(GoiTin pack)
@@ -57,8 +55,9 @@ namespace BaiTap3
             }
 
             var (hash, salt) = BamMatKhau.Bam(Pack.password);
-            using (var TaoNguoiDung = new SqlCommand("INSERT INTO NGUOIDUNG (Username, PasswordHash , PasswordSalt , Email" +
-                "VALUES (@u , @pHash , @pSalt, @email", cn))
+            using (var TaoNguoiDung = new SqlCommand(
+                    "INSERT INTO NGUOIDUNG (Username, PasswordHash, PasswordSalt, Email) " +
+                    "VALUES (@u, @pHash, @pSalt, @email)", cn))
             {
                 TaoNguoiDung.Parameters.Add("@u", SqlDbType.NVarChar, 50).Value = Pack.username;
                 TaoNguoiDung.Parameters.Add("@pHash", SqlDbType.NVarChar, 50).Value = hash;
@@ -115,8 +114,9 @@ namespace BaiTap3
             string id = Guid.NewGuid().ToString();
             using (tcp)
             {
-                StreamWriter _ghi = new StreamWriter(tcp.GetStream());
-                StreamReader _doc = new StreamReader(tcp.GetStream());
+               
+                StreamWriter _ghi = new StreamWriter(tcp.GetStream(), new UTF8Encoding(false)) { AutoFlush = true };
+                StreamReader _doc = new StreamReader(tcp.GetStream(), Encoding.UTF8);
                 _danhsachClient[id] = _ghi;
                 DateTime now = DateTime.Now;
                 Console.WriteLine($" [{now}] , [{id}] vào -> Tổng cộng {_danhsachClient.Count} Client đang kết nối!");
