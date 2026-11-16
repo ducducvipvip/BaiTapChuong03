@@ -1,21 +1,27 @@
 using BaiTap3;
+using System.Runtime.InteropServices;
 
 namespace BaiTapChuong03
 {
     internal static class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
+
+        [DllImport("kernel32.dll")]
+        private static extern bool AllocConsole();
+
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+            if (args.Length > 0 && args[0] == "server")
+            {
+                AllocConsole();
+                Console.OutputEncoding = System.Text.Encoding.UTF8;
+                new Server().ChayAsync().GetAwaiter().GetResult();
+                return;
+            }
+
             ApplicationConfiguration.Initialize();
-            var server = new Server();
-            _ = server.ChayAsync();
-            Application.Run(new LoginForm());
+            Application.Run(new TurnOnForm());
         }
     }
 }

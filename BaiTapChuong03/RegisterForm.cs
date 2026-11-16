@@ -16,9 +16,13 @@ namespace BaiTapChuong03
 {
     public partial class RegisterForm : Form
     {
-        public RegisterForm()
+        private readonly StreamWriter ghi;
+        private readonly StreamReader doc;
+        public RegisterForm(StreamWriter ghi, StreamReader doc)
         {
             InitializeComponent();
+            this.ghi = ghi;
+            this.doc = doc;
         }
 
         private async void btnDangKy_Click(object sender, EventArgs e)
@@ -51,7 +55,7 @@ namespace BaiTapChuong03
             string serverIP = txtServerIP.Text.Trim();
             if (string.IsNullOrWhiteSpace(serverIP) || !IPAddress.TryParse(serverIP, out IPAddress? ipAddress))
             {
-                lblTrangThaiKetNoi.Text = "Lỗi kết nối";
+                labelTrangThai.Text = "Lỗi kết nối";
                 MessageBox.Show("Địa chỉ IP Server không hợp lệ.", "Đăng ký", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtServerIP.Focus();
                 return;
@@ -60,40 +64,16 @@ namespace BaiTapChuong03
             if (!int.TryParse(txtServerPort.Text.Trim(), out int serverPort) ||
                 serverPort < 1024 || serverPort > 49151)
             {
-                lblTrangThaiKetNoi.Text = "Lỗi kết nối";
+                labelTrangThai.Text = "Lỗi kết nối";
                 MessageBox.Show("Cổng Server phải là số nguyên từ 1024 đến 49151.", "Đăng ký", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtServerPort.Focus();
                 return;
             }
 
             btnDangKy.Enabled = false;
-            lblTrangThaiKetNoi.Text = "Đang kết nối...";
-            try
-            {
-                using var tcpClient = new TcpClient();
-                await tcpClient.ConnectAsync(ipAddress, serverPort);
-
-                using NetworkStream networkStream = tcpClient.GetStream();
-                using var doc = new StreamReader(networkStream, Encoding.UTF8, true, 1024, true);
-                using var ghi = new StreamWriter(networkStream, new UTF8Encoding(false), 1024, true)
-                {
-                    AutoFlush = true
-                };
-
-                string? goiTinChao = await doc.ReadLineAsync();
-                if (string.IsNullOrWhiteSpace(goiTinChao))
-                {
-                    throw new IOException();
-                }
-
-                var yeuCau = new GoiTin(
-                    "DANGKY",
-                    hoTen: txtFullName.Text.Trim(),
-                    username: txtUsername.Text.Trim(),
-                    password: txtPassword.Text,
-                    email: txtEmail.Text.Trim(),
-                    birthday: dtpBirthday.Value.ToString("yyyy-MM-dd"));
-
+            labelTrangThai.Text = "Đang kết nối...";
+            try { 
+                var yeuCau = new GoiTin("DANGKY", hoTen: txtFullName.Text.Trim(), username: txtUsername.Text.Trim(), password: txtPassword.Text, email: txtEmail.Text.Trim());
                 await ghi.WriteLineAsync(JsonSerializer.Serialize(yeuCau));
                 string? dongPhanHoi = await doc.ReadLineAsync();
                 if (string.IsNullOrWhiteSpace(dongPhanHoi))
@@ -109,30 +89,30 @@ namespace BaiTapChuong03
 
                 if (phanHoi.Loai.Equals("OK", StringComparison.OrdinalIgnoreCase))
                 {
-                    lblTrangThaiKetNoi.Text = "Đăng ký thành công";
+                    labelTrangThai.Text = "Đăng ký thành công";
                     MessageBox.Show(phanHoi.ThongBao ?? "Đăng ký thành công.", "Đăng ký", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     DialogResult = DialogResult.OK;
                     Close();
                 }
                 else
                 {
-                    lblTrangThaiKetNoi.Text = "Đăng ký thất bại";
+                    labelTrangThai.Text = "Đăng ký thất bại";
                     MessageBox.Show(phanHoi.ThongBao ?? "Đăng ký thất bại.", "Đăng ký", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (SocketException)
             {
-                lblTrangThaiKetNoi.Text = "Lỗi kết nối";
+                labelTrangThai.Text = "Lỗi kết nối";
                 MessageBox.Show("Không thể kết nối đến máy chủ. Vui lòng kiểm tra Server đang hoạt động.", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (IOException)
             {
-                lblTrangThaiKetNoi.Text = "Lỗi kết nối";
+                labelTrangThai.Text = "Lỗi kết nối";
                 MessageBox.Show("Kết nối đến máy chủ bị gián đoạn. Vui lòng thử lại.", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (JsonException)
             {
-                lblTrangThaiKetNoi.Text = "Lỗi kết nối";
+                labelTrangThai.Text = "Lỗi kết nối";
                 MessageBox.Show("Máy chủ trả về dữ liệu không hợp lệ. Vui lòng thử lại.", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
@@ -157,6 +137,16 @@ namespace BaiTapChuong03
         private void btnQuayLai_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void RegisterForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelTrangThai_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

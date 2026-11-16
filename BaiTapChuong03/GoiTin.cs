@@ -12,7 +12,6 @@ namespace BaiTap3
         string ThongBao = null,
         string username = null,
         string password = null,
-        string email = null,
-        string? birthday = null
+        string email = null
     );
 }

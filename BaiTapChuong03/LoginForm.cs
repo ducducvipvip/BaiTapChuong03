@@ -116,9 +116,10 @@ namespace BaiTapChuong03
                     return;
                 }
 
-                var phanHoi = JsonSerializer.Deserialize<GoiTin>(phanHoiJson);
+                GoiTin phanHoi = JsonSerializer.Deserialize<GoiTin>(phanHoiJson);
                 if (phanHoi != null && phanHoi.Loai == "Success")
                 {
+                    MessageBox.Show("Đăng nhập thành công! ");
                     MainForm mainForm = new MainForm(phanHoi, _client, _reader, _writer);
                     this.Hide();
                     mainForm.ShowDialog();
@@ -149,8 +150,13 @@ namespace BaiTapChuong03
 
         private void btnMoDangKy_Click(object sender, EventArgs e)
         {
-            using var registerForm = new RegisterForm();
-            registerForm.ShowDialog(this);
+            if (_reader == null || _writer == null)
+            {
+                MessageBox.Show("Chưa kết nối với Server!");
+                return;
+            }
+            using var formDangKy = new RegisterForm(_writer, _reader);
+            formDangKy.ShowDialog(this);
         }
 
         private void DongKetNoi()
@@ -178,6 +184,26 @@ namespace BaiTapChuong03
         {
             DongKetNoi();
             base.OnFormClosing(e);
+        }
+
+        private void lblLoi_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblLoi_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LoginForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+
         }
     }
 }
