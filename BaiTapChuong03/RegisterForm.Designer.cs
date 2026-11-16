@@ -13,11 +13,16 @@
         private System.Windows.Forms.Label lblEmail;
         private System.Windows.Forms.Label lblFullName;
         private System.Windows.Forms.Label lblBirthday;
+        private System.Windows.Forms.Label lblServerIP;
+        private System.Windows.Forms.Label lblServerPort;
+        private System.Windows.Forms.Label lblTrangThaiKetNoi;
         private System.Windows.Forms.TextBox txtUsername;
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.TextBox txtConfirmPassword;
         private System.Windows.Forms.TextBox txtEmail;
         private System.Windows.Forms.TextBox txtFullName;
+        private System.Windows.Forms.TextBox txtServerIP;
+        private System.Windows.Forms.TextBox txtServerPort;
         private System.Windows.Forms.DateTimePicker dtpBirthday;
         private System.Windows.Forms.Button btnDangKy;
         private System.Windows.Forms.Button btnQuayLai;
@@ -51,11 +56,16 @@
             this.lblEmail = new System.Windows.Forms.Label();
             this.lblFullName = new System.Windows.Forms.Label();
             this.lblBirthday = new System.Windows.Forms.Label();
+            this.lblServerIP = new System.Windows.Forms.Label();
+            this.lblServerPort = new System.Windows.Forms.Label();
+            this.lblTrangThaiKetNoi = new System.Windows.Forms.Label();
             this.txtUsername = new System.Windows.Forms.TextBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.txtConfirmPassword = new System.Windows.Forms.TextBox();
             this.txtEmail = new System.Windows.Forms.TextBox();
             this.txtFullName = new System.Windows.Forms.TextBox();
+            this.txtServerIP = new System.Windows.Forms.TextBox();
+            this.txtServerPort = new System.Windows.Forms.TextBox();
             this.dtpBirthday = new System.Windows.Forms.DateTimePicker();
             this.btnDangKy = new System.Windows.Forms.Button();
             this.btnQuayLai = new System.Windows.Forms.Button();
@@ -143,20 +153,52 @@
             this.dtpBirthday.Size = new System.Drawing.Size(150, 23);
             this.dtpBirthday.TabIndex = 12;
             // 
+            // server connection
+            // 
+            this.lblServerIP.AutoSize = true;
+            this.lblServerIP.Location = new System.Drawing.Point(35, 315);
+            this.lblServerIP.Name = "lblServerIP";
+            this.lblServerIP.Size = new System.Drawing.Size(62, 15);
+            this.lblServerIP.TabIndex = 13;
+            this.lblServerIP.Text = "IP Server:";
+            this.txtServerIP.Location = new System.Drawing.Point(170, 312);
+            this.txtServerIP.Name = "txtServerIP";
+            this.txtServerIP.Size = new System.Drawing.Size(180, 23);
+            this.txtServerIP.TabIndex = 14;
+            this.txtServerIP.Text = "127.0.0.1";
+            this.lblServerPort.AutoSize = true;
+            this.lblServerPort.Location = new System.Drawing.Point(35, 355);
+            this.lblServerPort.Name = "lblServerPort";
+            this.lblServerPort.Size = new System.Drawing.Size(69, 15);
+            this.lblServerPort.TabIndex = 15;
+            this.lblServerPort.Text = "Cổng Server:";
+            this.txtServerPort.Location = new System.Drawing.Point(170, 352);
+            this.txtServerPort.Name = "txtServerPort";
+            this.txtServerPort.Size = new System.Drawing.Size(120, 23);
+            this.txtServerPort.TabIndex = 16;
+            this.txtServerPort.Text = "8386";
+            this.lblTrangThaiKetNoi.AutoSize = true;
+            this.lblTrangThaiKetNoi.ForeColor = System.Drawing.Color.DimGray;
+            this.lblTrangThaiKetNoi.Location = new System.Drawing.Point(35, 390);
+            this.lblTrangThaiKetNoi.Name = "lblTrangThaiKetNoi";
+            this.lblTrangThaiKetNoi.Size = new System.Drawing.Size(88, 15);
+            this.lblTrangThaiKetNoi.TabIndex = 17;
+            this.lblTrangThaiKetNoi.Text = "Chưa kết nối";
+            // 
             // buttons
             // 
-            this.btnDangKy.Location = new System.Drawing.Point(170, 325);
+            this.btnDangKy.Location = new System.Drawing.Point(170, 425);
             this.btnDangKy.Name = "btnDangKy";
             this.btnDangKy.Size = new System.Drawing.Size(120, 35);
-            this.btnDangKy.TabIndex = 13;
+            this.btnDangKy.TabIndex = 18;
             this.btnDangKy.Text = "Đăng ký";
             this.btnDangKy.UseVisualStyleBackColor = true;
             this.btnDangKy.Click += new System.EventHandler(this.btnDangKy_Click);
             this.btnQuayLai.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnQuayLai.Location = new System.Drawing.Point(310, 325);
+            this.btnQuayLai.Location = new System.Drawing.Point(310, 425);
             this.btnQuayLai.Name = "btnQuayLai";
             this.btnQuayLai.Size = new System.Drawing.Size(120, 35);
-            this.btnQuayLai.TabIndex = 14;
+            this.btnQuayLai.TabIndex = 19;
             this.btnQuayLai.Text = "Quay lại / Hủy";
             this.btnQuayLai.UseVisualStyleBackColor = true;
             this.btnQuayLai.Click += new System.EventHandler(this.btnQuayLai_Click);
@@ -167,9 +209,14 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnQuayLai;
-            this.ClientSize = new System.Drawing.Size(520, 390);
+            this.ClientSize = new System.Drawing.Size(520, 485);
             this.Controls.Add(this.btnQuayLai);
             this.Controls.Add(this.btnDangKy);
+            this.Controls.Add(this.lblTrangThaiKetNoi);
+            this.Controls.Add(this.txtServerPort);
+            this.Controls.Add(this.lblServerPort);
+            this.Controls.Add(this.txtServerIP);
+            this.Controls.Add(this.lblServerIP);
             this.Controls.Add(this.dtpBirthday);
             this.Controls.Add(this.txtFullName);
             this.Controls.Add(this.txtEmail);

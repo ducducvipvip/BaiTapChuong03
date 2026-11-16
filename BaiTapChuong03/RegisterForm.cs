@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
+using System.Net;
 using System.Net.Mail;
 using System.Net.Sockets;
 using System.Text;
@@ -47,11 +48,30 @@ namespace BaiTapChuong03
                 return;
             }
 
+            string serverIP = txtServerIP.Text.Trim();
+            if (string.IsNullOrWhiteSpace(serverIP) || !IPAddress.TryParse(serverIP, out IPAddress? ipAddress))
+            {
+                lblTrangThaiKetNoi.Text = "Lỗi kết nối";
+                MessageBox.Show("Địa chỉ IP Server không hợp lệ.", "Đăng ký", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtServerIP.Focus();
+                return;
+            }
+
+            if (!int.TryParse(txtServerPort.Text.Trim(), out int serverPort) ||
+                serverPort < 1024 || serverPort > 49151)
+            {
+                lblTrangThaiKetNoi.Text = "Lỗi kết nối";
+                MessageBox.Show("Cổng Server phải là số nguyên từ 1024 đến 49151.", "Đăng ký", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtServerPort.Focus();
+                return;
+            }
+
             btnDangKy.Enabled = false;
+            lblTrangThaiKetNoi.Text = "Đang kết nối...";
             try
             {
                 using var tcpClient = new TcpClient();
-                await tcpClient.ConnectAsync("localhost", 8386);
+                await tcpClient.ConnectAsync(ipAddress, serverPort);
 
                 using NetworkStream networkStream = tcpClient.GetStream();
                 using var doc = new StreamReader(networkStream, Encoding.UTF8, true, 1024, true);
@@ -89,25 +109,30 @@ namespace BaiTapChuong03
 
                 if (phanHoi.Loai.Equals("OK", StringComparison.OrdinalIgnoreCase))
                 {
+                    lblTrangThaiKetNoi.Text = "Đăng ký thành công";
                     MessageBox.Show(phanHoi.ThongBao ?? "Đăng ký thành công.", "Đăng ký", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     DialogResult = DialogResult.OK;
                     Close();
                 }
                 else
                 {
+                    lblTrangThaiKetNoi.Text = "Đăng ký thất bại";
                     MessageBox.Show(phanHoi.ThongBao ?? "Đăng ký thất bại.", "Đăng ký", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (SocketException)
             {
+                lblTrangThaiKetNoi.Text = "Lỗi kết nối";
                 MessageBox.Show("Không thể kết nối đến máy chủ. Vui lòng kiểm tra Server đang hoạt động.", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (IOException)
             {
+                lblTrangThaiKetNoi.Text = "Lỗi kết nối";
                 MessageBox.Show("Kết nối đến máy chủ bị gián đoạn. Vui lòng thử lại.", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (JsonException)
             {
+                lblTrangThaiKetNoi.Text = "Lỗi kết nối";
                 MessageBox.Show("Máy chủ trả về dữ liệu không hợp lệ. Vui lòng thử lại.", "Lỗi kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
